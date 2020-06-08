@@ -11,6 +11,10 @@ import javax.swing.JTextField;
 public class CalculatorFrame extends JFrame {
     private JTextField display;
 
+    private double operand1 = 0;
+    private double operand2 = 0;
+    private String operator = "";
+
     private static final int FRAME_WIDTH = 300;
     private static final int FRAME_HEIGHT = 300;
 
@@ -62,6 +66,40 @@ public class CalculatorFrame extends JFrame {
         }
     }
 
+    class OperatorListener implements ActionListener {
+        private String op;
+
+        public OperatorListener(String op) {
+            this.op = op;
+        }
+
+        public void actionPerformed(ActionEvent event) {
+            operand1 = Double.parseDouble(display.getText());
+            operator = op;
+            display.setText("");
+        }
+    }
+
+    class EqualListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            operand2 = Double.parseDouble(display.getText());
+            double ans = 0;
+            if (operator.equals("+")) {
+                ans = operand1 + operand2;
+            }
+            else if (operator.equals("-")) {
+                ans = operand1 - operand2;
+            }
+            else if (operator.equals("/")) {
+                ans = operand1 / operand2;
+            }
+            else if (operator.equals("*")) {
+                ans = operand1 * operand2;
+            }
+            display.setText("" + ans);
+        }
+    }
+
 
     public JButton makeDigitButton(String digit) {
         JButton button = new JButton(digit);
@@ -74,6 +112,12 @@ public class CalculatorFrame extends JFrame {
 
     public JButton makeOperatorButton(String op) {
         JButton button = new JButton(op);
+        if (op.equals("=")) {
+            button.addActionListener(new EqualListener());
+        }
+        else {
+            button.addActionListener(new OperatorListener(op));
+        }
         return button;
     }
 }
